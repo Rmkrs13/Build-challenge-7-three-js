@@ -1,8 +1,6 @@
 import * as THREE from 'three';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GUI } from 'dat.gui';
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -38,7 +36,7 @@ scene.environment = environmentMap;
 
 // GLTF Loader
 const loader = new GLTFLoader();
-loader.load('/models/Shoe_compressed.glb', (gltf) => {
+loader.load('/models/Shoe.glb', (gltf) => {
   const sneaker = gltf.scene;
   sneaker.scale.set(1.5, 1.5, 1.5);
   sneaker.traverse((child) => {
@@ -48,15 +46,9 @@ loader.load('/models/Shoe_compressed.glb', (gltf) => {
     }
   });
   scene.add(sneaker);
+}, undefined, (error) => {
+  console.error('An error occurred while loading the model:', error);
 });
-
-// GUI
-const gui = new GUI();
-const lightFolder = gui.addFolder('Directional Light');
-lightFolder.add(directionalLight.position, 'x', -10, 10).name('Light X');
-lightFolder.add(directionalLight.position, 'y', -10, 10).name('Light Y');
-lightFolder.add(directionalLight.position, 'z', -10, 10).name('Light Z');
-lightFolder.open();
 
 // Animation Loop
 function animate() {

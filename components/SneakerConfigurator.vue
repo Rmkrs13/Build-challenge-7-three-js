@@ -9,10 +9,6 @@
         <label for="sole-color">Zoolkleur:</label>
         <input id="sole-color" type="color" v-model="soleColor" />
       </div>
-      <div>
-        <label for="extra-option">Extra Optie:</label>
-        <input id="extra-option" type="text" v-model="extraOption" />
-      </div>
     </div>
   </template>
   
@@ -22,7 +18,6 @@
       return {
         lacesColor: '#ffffff',
         soleColor: '#000000',
-        extraOption: '',
       };
     },
   };

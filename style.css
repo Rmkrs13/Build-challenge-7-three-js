@@ -3,3 +3,8 @@ body {
   overflow: hidden;
   font-family: Arial, sans-serif;
 }
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
