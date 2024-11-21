@@ -1,26 +1,67 @@
 <template>
-  <div>
-    <h1>Hello, Sneaker Customizer!</h1>
-    <p>Als je dit ziet, werkt je Vue-app correct.</p>
+  <div id="app">
+    <header>
+      <h1>Sneaker Customizer</h1>
+    </header>
+    <main>
+      <Customizer />
+    </main>
+    <footer>
+      <p>&copy; 2024 Sneaker Customizer Store</p>
+    </footer>
   </div>
 </template>
 
 <script>
+import Customizer from './components/Customizer.vue';
+
 export default {
   name: 'App',
+  components: {
+    Customizer,
+  },
 };
 </script>
 
 <style>
+/* Basis styling voor de pagina */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
+  font-family: Arial, sans-serif;
   background-color: #f5f5f5;
 }
 
-h1 {
-  color: #2c3e50;
+header {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
   text-align: center;
-  margin-top: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+main {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+footer p {
+  margin: 0;
 }
 </style>
