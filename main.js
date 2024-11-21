@@ -1,8 +1,9 @@
+import { createApp } from 'vue';
+import App from './App.vue';
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { createApp } from 'vue';
-import App from './App.vue';
 
 let scene, camera, renderer, controls, sneaker;
 
@@ -32,12 +33,6 @@ directionalLight.position.set(5, 10, 7.5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
-// Environment Map
-const textureLoader = new THREE.TextureLoader();
-const environmentMap = textureLoader.load('/textures/environment.jpg');
-scene.background = environmentMap;
-scene.environment = environmentMap;
-
 // GLTF Loader
 const loader = new GLTFLoader();
 loader.load('/models/Shoe.glb', (gltf) => {
@@ -50,7 +45,8 @@ loader.load('/models/Shoe.glb', (gltf) => {
     }
   });
   scene.add(sneaker);
-  // Make sneaker accessible in Vue for customization
+
+  // Maak sneaker beschikbaar in Vue
   window.sneaker = sneaker;
 });
 
