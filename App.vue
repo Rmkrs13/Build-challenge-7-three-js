@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <header>
-      <h1>Sneaker Customizer</h1>
+      <h1>Sneaker Configurator</h1>
     </header>
     <main>
       <Customizer />
     </main>
     <footer>
-      <p>&copy; 2024 Sneaker Customizer Store</p>
+      <p>Challenge 6 - Three.js | Lars Raeymaekers</p>
     </footer>
   </div>
 </template>
@@ -44,7 +44,6 @@ header h1 {
 }
 
 main {
-  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

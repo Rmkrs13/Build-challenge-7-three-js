@@ -1,6 +1,6 @@
 <template>
   <div id="customizer">
-    <h2>Pas je Sneaker aan</h2>
+    <h2>Mijn sneaker aanpassen</h2>
     <div class="controls">
       <div class="control">
         <label for="laces-color">Veterskleur:</label>
@@ -67,8 +67,8 @@ export default {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin: 20px;
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 48px;
+  left: 0px;
   z-index: 1000;
 }
 
