@@ -4,8 +4,7 @@ import App from './App.vue';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { GUI } from 'dat.gui';
 
 let scene, camera, renderer, controls, sneaker, gui;
@@ -28,10 +27,12 @@ controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
 // Environment Map
-const textureLoader = new THREE.TextureLoader();
-const environmentMap = textureLoader.load('/textures/environment.jpg');
-scene.background = environmentMap;
-scene.environment = environmentMap;
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load('/textures/environment.hdr', (texture) => {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = texture;
+  scene.environment = texture;
+});
 
 // Lights
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -42,14 +43,27 @@ directionalLight.position.set(5, 10, 7.5);
 directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.width = 1024;
 directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.camera.left = -5;
+directionalLight.shadow.camera.right = 5;
+directionalLight.shadow.camera.top = 5;
+directionalLight.shadow.camera.bottom = -5;
 scene.add(directionalLight);
+
+// Floor
+const planeGeometry = new THREE.PlaneGeometry(10, 10);
+const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
+const floor = new THREE.Mesh(planeGeometry, planeMaterial);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = 0;
+floor.receiveShadow = true;
+scene.add(floor);
 
 // GLTF Loader
 const loader = new GLTFLoader();
 loader.load('/models/Shoe.glb', (gltf) => {
   sneaker = gltf.scene;
   sneaker.scale.set(3, 3, 3);
-  sneaker.position.set(0, 0, 0);
+  sneaker.position.set(0, 0.5, 0); // Zorg ervoor dat de schoen op de vloer staat
   sneaker.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true;
@@ -79,20 +93,6 @@ loader.load('/models/Shoe.glb', (gltf) => {
   gui.add(params, 'modelRotation', -Math.PI, Math.PI).name('Model Rotation').onChange((value) => {
     sneaker.rotation.y = value;
   });
-});
-
-// Branding: Text and Logo
-const fontLoader = new FontLoader();
-fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
-  const textGeometry = new THREE.TextGeometry('Sneaker Customizer', {
-    font: font,
-    size: 0.2,
-    height: 0.05,
-  });
-  const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-  textMesh.position.set(-1, 1.5, 0);
-  scene.add(textMesh);
 });
 
 // Animation Loop
