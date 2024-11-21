@@ -1,22 +1,26 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { createApp } from 'vue';
+import App from './App.vue';
+
+let scene, camera, renderer, controls, sneaker;
 
 // Renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
 // Scene
-const scene = new THREE.Scene();
+scene = new THREE.Scene();
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 1.5, 5);
 
 // Controls
-const controls = new OrbitControls(camera, renderer.domElement);
+controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
 // Lights
@@ -37,7 +41,7 @@ scene.environment = environmentMap;
 // GLTF Loader
 const loader = new GLTFLoader();
 loader.load('/models/Shoe.glb', (gltf) => {
-  const sneaker = gltf.scene;
+  sneaker = gltf.scene;
   sneaker.scale.set(1.5, 1.5, 1.5);
   sneaker.traverse((child) => {
     if (child.isMesh) {
@@ -46,8 +50,8 @@ loader.load('/models/Shoe.glb', (gltf) => {
     }
   });
   scene.add(sneaker);
-}, undefined, (error) => {
-  console.error('An error occurred while loading the model:', error);
+  // Make sneaker accessible in Vue for customization
+  window.sneaker = sneaker;
 });
 
 // Animation Loop
@@ -65,3 +69,6 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// Start Vue App
+createApp(App).mount('#app');
