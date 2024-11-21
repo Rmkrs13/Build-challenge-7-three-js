@@ -1,6 +1,6 @@
 <template>
   <div id="customizer">
-    <h2>Mijn sneaker aanpassen</h2>
+    <h2>Mijn voorkeuren</h2>
     <div class="controls">
       <div class="control">
         <label for="laces-color">Veterskleur:</label>
@@ -61,28 +61,39 @@ export default {
 
 <style>
 #customizer {
-  background: white;
+  background: rgba(255, 255, 255, 0.2); /* Transparent background */
+  backdrop-filter: blur(10px); /* Blur effect for glassy look */
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for effect */
   margin: 20px;
   position: fixed;
   top: 48px;
   left: 0px;
   z-index: 1000;
+  width: 300px; /* Adjust width for a better design */
+  color: black; /* Text color for better contrast */
 }
 
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 }
 
 .control label {
   font-weight: bold;
+  font-size: 14px; /* Adjust font size for modern look */
 }
 
 .control input[type="color"] {
   width: 100%;
+  border: none;
+  border-radius: 6px;
+  height: 36px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 </style>
