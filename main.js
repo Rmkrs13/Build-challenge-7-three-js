@@ -63,36 +63,40 @@ const loader = new GLTFLoader();
 loader.load('/models/Shoe.glb', (gltf) => {
   sneaker = gltf.scene;
   sneaker.scale.set(3, 3, 3);
-  sneaker.position.set(0, 0.5, 0); // Zorg ervoor dat de schoen op de vloer staat
+  sneaker.position.set(0, 0.5, 0);
+
   sneaker.traverse((child) => {
     if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
+      console.log("Mesh name:", child.name); // Debug mesh names
+      child.castShadow = true; // Cast shadows
+      child.receiveShadow = true; // Receive shadows
     }
   });
+
   scene.add(sneaker);
+  window.sneaker = sneaker; // Make sneaker globally accessible
+});
 
-  // GUI Controls
-  gui = new GUI();
-  const params = {
-    lightIntensity: 1,
-    cameraAngle: 0,
-    modelRotation: 0,
-  };
+// GUI Controls
+gui = new GUI();
+const params = {
+  lightIntensity: 1,
+  cameraAngle: 0,
+  modelRotation: 0,
+};
 
-  gui.add(params, 'lightIntensity', 0, 2).name('Light Intensity').onChange((value) => {
-    directionalLight.intensity = value;
-  });
+gui.add(params, 'lightIntensity', 0, 2).name('Light Intensity').onChange((value) => {
+  directionalLight.intensity = value;
+});
 
-  gui.add(params, 'cameraAngle', -Math.PI, Math.PI).name('Camera Angle').onChange((value) => {
-    camera.position.x = Math.sin(value) * 2;
-    camera.position.z = Math.cos(value) * 2;
-    camera.lookAt(0, 0, 0);
-  });
+gui.add(params, 'cameraAngle', -Math.PI, Math.PI).name('Camera Angle').onChange((value) => {
+  camera.position.x = Math.sin(value) * 2;
+  camera.position.z = Math.cos(value) * 2;
+  camera.lookAt(0, 0, 0);
+});
 
-  gui.add(params, 'modelRotation', -Math.PI, Math.PI).name('Model Rotation').onChange((value) => {
-    sneaker.rotation.y = value;
-  });
+gui.add(params, 'modelRotation', -Math.PI, Math.PI).name('Model Rotation').onChange((value) => {
+  if (sneaker) sneaker.rotation.y = value;
 });
 
 // Animation Loop
