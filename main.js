@@ -4,6 +4,8 @@ import App from './App.vue';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+
 import { GUI } from 'dat.gui';
 
 let scene, camera, renderer, controls, sneaker, gui;
@@ -80,7 +82,7 @@ loader.load('/models/Shoe.glb', (gltf) => {
 });
 
 // Branding: Text and Logo
-const fontLoader = new THREE.FontLoader();
+const fontLoader = new FontLoader();
 fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
   const textGeometry = new THREE.TextGeometry('Sneaker Customizer', {
     font: font,
