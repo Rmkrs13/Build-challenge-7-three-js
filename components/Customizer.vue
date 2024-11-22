@@ -23,8 +23,8 @@ export default {
   data() {
     return {
       lacesColor: "#ffffff",
-      soleColor: "#000000",
-      shoeBodyColor: "#ff0000",
+      soleColor: "#ffffff",
+      shoeBodyColor: "#ffffff",
     };
   },
   methods: {
