@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <header>
-      <h1>Sneaker Configurator</h1>
+      <a href="#">
+        <img src="./public/logo.png" alt="Swear">
+      </a>
     </header>
     <main>
       <Customizer />
