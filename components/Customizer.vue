@@ -14,32 +14,31 @@
       <p>{{ stepDescription }}</p>
 
       <!-- Pre-defined Color Options -->
-      <div v-if="step <= 3" class="color-options">
-        <button class="color-button red" @click="applyColor('red')">Red</button>
-        <button class="color-button green" @click="applyColor('green')">Green</button>
-        <button class="color-button blue" @click="applyColor('blue')">Blue</button>
-        <button class="color-button custom" @click="toggleCustomPicker">
-          Custom
+      <div class="color-options">
+        <button class="color-button red" @click="applyColor('red')" />
+        <button class="color-button green" @click="applyColor('green')" />
+        <button class="color-button blue" @click="applyColor('blue')" />
+        <button class="color-button white" @click="applyColor('white')" />
+        <div class="color-button custom">
+          <input
+            type="color"
+            v-model="customColor"
+            @input="applyCustomColor"
+          />
+        </div>
+      </div>
+
+      <div class="navigation-buttons">
+        <button v-if="step > 1" class="back-button" @click="previousStep">
+          Back
+        </button>
+        <button v-if="step < 3" class="next-button" @click="nextStep">
+          Next
+        </button>
+        <button v-if="step === 3" class="cta-button" @click="orderShoe">
+          Let’s Order
         </button>
       </div>
-
-      <!-- Custom Color Picker -->
-      <div v-if="showCustomPicker" class="custom-picker">
-        <label for="custom-color">Choose Color:</label>
-        <input
-          id="custom-color"
-          type="color"
-          v-model="customColor"
-          @input="applyCustomColor"
-        />
-      </div>
-
-      <button v-if="step < 3" class="next-button" @click="nextStep">
-        Next
-      </button>
-      <button v-if="step === 3" class="cta-button" @click="orderShoe">
-        Let’s Order
-      </button>
 
       <div class="progress-bar">
         <div class="progress" :style="{ width: progress + '%' }"></div>
@@ -55,7 +54,6 @@ export default {
       step: 0,
       selectedColor: "",
       customColor: "#ffffff",
-      showCustomPicker: false,
     };
   },
   computed: {
@@ -80,8 +78,10 @@ export default {
       this.step = 1;
     },
     nextStep() {
-      this.showCustomPicker = false; // Hide picker when advancing
       if (this.step < 3) this.step++;
+    },
+    previousStep() {
+      if (this.step > 1) this.step--;
     },
     orderShoe() {
       alert("Order placed successfully!");
@@ -93,9 +93,6 @@ export default {
       if (this.step === 1) this.updateLacesColor(hexColor);
       if (this.step === 2) this.updateSoleColor(hexColor);
       if (this.step === 3) this.updateBodyColor(hexColor);
-    },
-    toggleCustomPicker() {
-      this.showCustomPicker = !this.showCustomPicker;
     },
     applyCustomColor() {
       this.selectedColor = this.customColor;
@@ -112,6 +109,8 @@ export default {
           return "#00ff00";
         case "blue":
           return "#0000ff";
+        case "white":
+          return "#ffffff";
         default:
           return "#ffffff";
       }
@@ -168,12 +167,12 @@ export default {
 }
 
 .color-button {
-  width: 60px;
-  height: 60px;
+  width: 40px; /* Smaller size */
+  height: 40px; /* Smaller size */
   border: none;
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: transform 0.3s;
+  position: relative;
 }
 
 .color-button.red {
@@ -188,19 +187,36 @@ export default {
   background-color: #0000ff;
 }
 
-.color-button.custom {
+.color-button.white {
   background-color: #ffffff;
   border: 1px solid #ccc;
+}
+
+.color-button.custom {
+  background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-button.custom input[type="color"] {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .color-button:hover {
   transform: scale(1.1);
 }
 
-.custom-picker {
-  margin-top: 10px;
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
+.back-button,
 .next-button,
 .cta-button {
   background-color: #69ff47;
@@ -214,6 +230,7 @@ export default {
   transition: background-color 0.3s ease;
 }
 
+.back-button:hover,
 .next-button:hover,
 .cta-button:hover {
   background-color: #58e038;
