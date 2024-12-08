@@ -7,11 +7,11 @@
         <p>
           <strong>Configuration:</strong><br />
           <strong>Size:</strong> {{ order.shoeConfig.size }}<br />
-          <strong>Laces:</strong> 
+          <strong>Laces:</strong>
           <span :style="{ backgroundColor: order.shoeConfig.colors.laces }" class="color-sample"></span><br />
-          <strong>Sole:</strong> 
+          <strong>Sole:</strong>
           <span :style="{ backgroundColor: order.shoeConfig.colors.sole }" class="color-sample"></span><br />
-          <strong>Inside:</strong> 
+          <strong>Inside:</strong>
           <span :style="{ backgroundColor: order.shoeConfig.colors.inside }" class="color-sample"></span>
         </p>
       </div>
@@ -41,8 +41,8 @@
       };
     },
     async created() {
+      const token = localStorage.getItem("token");
       try {
-        const token = localStorage.getItem("token");
         const response = await axios.get(`https://api.sneaker-configurator.larslars.be/api/v1/orders/${this.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -53,8 +53,8 @@
     },
     methods: {
       async updateOrder() {
+        const token = localStorage.getItem("token");
         try {
-          const token = localStorage.getItem("token");
           await axios.put(
             `https://api.sneaker-configurator.larslars.be/api/v1/orders/${this.id}`,
             { status: this.order.status },
@@ -66,15 +66,13 @@
         }
       },
       async deleteOrder() {
+        const token = localStorage.getItem("token");
         try {
-          const token = localStorage.getItem("token");
           await axios.delete(`https://api.sneaker-configurator.larslars.be/api/v1/orders/${this.id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           this.message = "Order deleted successfully.";
-          setTimeout(() => {
-            this.$router.push("/dashboard");
-          }, 1000);
+          setTimeout(() => this.$router.push("/dashboard"), 1000);
         } catch (error) {
           this.message = "Failed to delete order.";
         }
@@ -82,7 +80,7 @@
     },
   };
   </script>
-  
+
   <style scoped>
   .order-view {
     font-family: Arial, sans-serif;
