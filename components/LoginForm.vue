@@ -1,60 +1,51 @@
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h2 class="text-2xl font-bold text-center mb-4">Admin Login</h2>
-        <form @submit.prevent="handleLogin">
-          <shadcn-input
-            label="Username"
+  <div class="flex items-center justify-center h-screen bg-gray-100">
+    <div class="p-8 bg-white rounded-lg shadow-md max-w-sm w-full">
+      <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <input
+            id="username"
             type="text"
             v-model="username"
-            placeholder="Enter your username"
-            required
-            class="mb-4"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
           />
-          <shadcn-input
-            label="Password"
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            id="password"
             type="password"
             v-model="password"
-            placeholder="Enter your password"
-            required
-            class="mb-4"
+            class="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm"
           />
-          <shadcn-button type="submit" class="w-full">Login</shadcn-button>
-        </form>
-        <p v-if="error" class="text-red-500 text-sm mt-2">{{ error }}</p>
-      </div>
+        </div>
+        <button
+          type="submit"
+          class="w-full p-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+        >
+          Login
+        </button>
+      </form>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        username: "",
-        password: "",
-        error: null,
-      };
+  </div>
+</template>
+
+<script>
+export default {
+  name: "LoginForm",
+  data() {
+    return {
+      username: "",
+      password: "",
+    };
+  },
+  methods: {
+    handleLogin() {
+      console.log("Login attempted:", this.username, this.password);
+      // Implement your authentication logic here
     },
-    methods: {
-      async handleLogin() {
-        try {
-          const response = await fetch("https://api.sneaker-configurator.larslars.be/api/v1/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username: this.username, password: this.password }),
-          });
-          const result = await response.json();
-  
-          if (response.ok) {
-            localStorage.setItem("token", result.token);
-            this.$router.push("/dashboard");
-          } else {
-            this.error = result.message;
-          }
-        } catch (err) {
-          this.error = "Something went wrong. Please try again.";
-        }
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
