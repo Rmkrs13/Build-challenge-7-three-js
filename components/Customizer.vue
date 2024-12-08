@@ -1,6 +1,5 @@
 <template>
   <div id="customizer">
-    <h2>Create Your Perfect Shoe</h2>
     <div v-if="step === 0">
       <p>
         Customize your shoe with ready-made colors or choose your own.
@@ -10,7 +9,6 @@
     </div>
 
     <div v-else>
-      <h2>Step {{ step }}</h2>
       <p>{{ stepDescription }}</p>
 
       <!-- Pre-defined Color Options -->
@@ -29,14 +27,18 @@
       </div>
 
       <div class="navigation-buttons">
-        <button v-if="step > 1" class="back-button" @click="previousStep">
+        <button
+          v-if="step > 1"
+          class="prev-button"
+          @click="previousStep"
+        >
           Back
         </button>
-        <button v-if="step < 3" class="next-button" @click="nextStep">
-          Next
-        </button>
-        <button v-if="step === 3" class="cta-button" @click="orderShoe">
-          Let’s Order
+        <button
+          class="next-button"
+          @click="nextStep"
+        >
+          {{ step === 3 ? "Let’s Order" : "Next" }}
         </button>
       </div>
 
@@ -79,6 +81,7 @@ export default {
     },
     nextStep() {
       if (this.step < 3) this.step++;
+      else this.orderShoe();
     },
     previousStep() {
       if (this.step > 1) this.step--;
@@ -167,8 +170,8 @@ export default {
 }
 
 .color-button {
-  width: 40px; /* Smaller size */
-  height: 40px; /* Smaller size */
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -216,12 +219,10 @@ export default {
   margin-top: 20px;
 }
 
-.back-button,
-.next-button,
-.cta-button {
-  background-color: #69ff47;
-  border: none;
-  color: #333;
+.prev-button {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #000000;
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -230,10 +231,38 @@ export default {
   transition: background-color 0.3s ease;
 }
 
-.back-button:hover,
-.next-button:hover,
+.prev-button:hover {
+  background-color: #f0f0f0;
+}
+
+.next-button {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.next-button:hover {
+  background-color: #333333;
+}
+
+.cta-button {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 .cta-button:hover {
-  background-color: #58e038;
+  background-color: #333333;
 }
 
 .progress-bar {
