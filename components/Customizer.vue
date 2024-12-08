@@ -1,6 +1,7 @@
 <template>
   <div id="customizer">
     <div v-if="step === 0">
+      <h2>Start Your Customization</h2>
       <p>
         Customize your shoe with ready-made colors or choose your own.
         Click the button below to start.
@@ -9,7 +10,7 @@
     </div>
 
     <div v-else>
-      <p>{{ stepDescription }}</p>
+      <h2><strong>{{ step }} {{ stepDescription }}</strong></h2>
 
       <!-- Pre-defined Color Options -->
       <div class="color-options">
