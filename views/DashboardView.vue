@@ -245,4 +245,5 @@ export default {
   font-style: italic;
   margin-top: 20px;
 }
+
 </style>
