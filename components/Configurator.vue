@@ -23,24 +23,19 @@
     },
     methods: {
       initScene() {
-        // Renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
         document.getElementById("three-container").appendChild(this.renderer.domElement);
   
-        // Scene
         this.scene = new THREE.Scene();
   
-        // Camera
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.set(0, 1, 2);
   
-        // Controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
   
-        // Environment Map
         const rgbeLoader = new RGBELoader();
         rgbeLoader.load("/textures/environment.hdr", (texture) => {
           texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -48,7 +43,6 @@
           this.scene.environment = texture;
         });
   
-        // Lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(ambientLight);
   
@@ -57,7 +51,6 @@
         directionalLight.castShadow = true;
         this.scene.add(directionalLight);
   
-        // Floor
         const planeGeometry = new THREE.PlaneGeometry(10, 10);
         const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
         const floor = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -66,7 +59,6 @@
         floor.receiveShadow = true;
         this.scene.add(floor);
   
-        // GLTF Loader
         const loader = new GLTFLoader();
         loader.load("/models/Shoe.glb", (gltf) => {
           this.sneaker = gltf.scene;
@@ -75,17 +67,11 @@
           this.scene.add(this.sneaker);
         });
   
-        // GUI
         this.gui = new GUI();
-        const params = {
-          lightIntensity: 1,
-          cameraAngle: 0,
-          modelRotation: 0,
-        };
-  
-        this.gui.add(params, "lightIntensity", 0, 2).name("Light Intensity");
-        this.gui.add(params, "cameraAngle", -Math.PI, Math.PI).name("Camera Angle");
-        this.gui.add(params, "modelRotation", -Math.PI, Math.PI).name("Model Rotation");
+        const params = { lightIntensity: 1, cameraAngle: 0, modelRotation: 0 };
+        this.gui.add(params, "lightIntensity", 0, 2);
+        this.gui.add(params, "cameraAngle", -Math.PI, Math.PI);
+        this.gui.add(params, "modelRotation", -Math.PI, Math.PI);
   
         this.animate();
       },
@@ -99,14 +85,8 @@
       this.initScene();
     },
     beforeUnmount() {
-      // Cleanup Three.js
       this.renderer.dispose();
       this.gui.destroy();
-      this.scene = null;
-      this.camera = null;
-      this.renderer = null;
-      this.controls = null;
-      this.sneaker = null;
     },
   };
   </script>
