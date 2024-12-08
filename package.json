@@ -12,9 +12,13 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
+    "@chakra-ui/vue": "^0.10.2-next.0",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
     "@vitejs/plugin-vue": "^5.2.0",
     "axios": "^1.7.9",
     "dat.gui": "^0.7.9",
+    "framer-motion": "^11.13.1",
     "socket.io-client": "^4.8.1",
     "three": "^0.170.0",
     "vue": "^3.5.13",
