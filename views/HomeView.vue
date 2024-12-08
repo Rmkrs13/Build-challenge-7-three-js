@@ -3,10 +3,10 @@
     <Header />
     <img src="/logo.png" alt="Swear Logo" class="logo" />
     <div class="customizer-section">
-      <Customizer />
+      <Customizer :onStepChange="updateStep" />
     </div>
     <Footer />
-    <SceneViewer />
+    <SceneViewer :configStep="currentStep" />
   </div>
 </template>
 
@@ -18,6 +18,16 @@ import Customizer from "../components/Customizer.vue";
 
 export default {
   components: { Header, Footer, SceneViewer, Customizer },
+  data() {
+    return {
+      currentStep: 0, // Track the current customization step
+    };
+  },
+  methods: {
+    updateStep(step) {
+      this.currentStep = step; // Update the step when it changes in the Customizer
+    },
+  },
 };
 </script>
 

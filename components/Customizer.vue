@@ -7,9 +7,8 @@
     </div>
 
     <div v-else>
-      <h3><strong>{{ step }} {{ stepDescription }}</strong></h3>
+      <h3><strong>{{ step }}. {{ stepDescription }}</strong></h3>
 
-      <!-- Pre-defined Color Options -->
       <div class="color-options">
         <button class="color-button red" @click="applyColor('red')" />
         <button class="color-button green" @click="applyColor('green')" />
@@ -25,17 +24,10 @@
       </div>
 
       <div class="navigation-buttons">
-        <button
-          v-if="step > 1"
-          class="prev-button"
-          @click="previousStep"
-        >
+        <button v-if="step > 1" class="prev-button" @click="previousStep">
           Back
         </button>
-        <button
-          class="next-button"
-          @click="nextStep"
-        >
+        <button class="next-button" @click="nextStep">
           {{ step === 3 ? "Let’s Order" : "Next" }}
         </button>
       </div>
@@ -49,6 +41,7 @@
 
 <script>
 export default {
+  props: ["onStepChange"], // Pass function to adjust the camera
   data() {
     return {
       step: 0,
@@ -76,13 +69,21 @@ export default {
   methods: {
     startCustomization() {
       this.step = 1;
+      this.onStepChange(this.step); // Notify SceneViewer of step change
     },
     nextStep() {
-      if (this.step < 3) this.step++;
-      else this.orderShoe();
+      if (this.step < 3) {
+        this.step++;
+        this.onStepChange(this.step); // Notify SceneViewer of step change
+      } else {
+        this.orderShoe();
+      }
     },
     previousStep() {
-      if (this.step > 1) this.step--;
+      if (this.step > 1) {
+        this.step--;
+        this.onStepChange(this.step); // Notify SceneViewer of step change
+      }
     },
     orderShoe() {
       alert("Order placed successfully!");
@@ -168,12 +169,11 @@ export default {
 }
 
 .color-button {
-  width: 30px; /* Smaller size */
-  height: 30px; /* Smaller size */
+  width: 30px;
+  height: 30px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  position: relative;
 }
 
 .color-button.red {
@@ -220,9 +220,9 @@ export default {
 .prev-button,
 .next-button,
 .cta-button {
-  font-size: 14px; /* Smaller buttons */
-  padding: 8px 16px; /* Smaller padding */
-  border-radius: 6px; /* Smaller radius */
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, border 0.3s ease;
@@ -242,13 +242,13 @@ export default {
 .cta-button {
   background-color: #000000;
   color: #ffffff;
-  border: 1px solid #ffffff; /* Border added */
+  border: 1px solid #ffffff;
 }
 
 .next-button:hover,
 .cta-button:hover {
   background-color: #333333;
-  border-color: #cccccc; /* Subtle hover effect */
+  border-color: #cccccc;
 }
 
 h2 {
@@ -257,7 +257,7 @@ h2 {
 }
 
 h3 {
-  font-size: 16px; /* Smaller step titles */
+  font-size: 16px;
   margin-bottom: 10px;
 }
 

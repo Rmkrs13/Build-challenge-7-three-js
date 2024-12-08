@@ -7,122 +7,96 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
-import { GUI } from "dat.gui";
 
 export default {
+  props: ["configStep"], // Receive the current step as a prop
   mounted() {
     this.initScene();
+  },
+  watch: {
+    configStep(newStep) {
+      this.adjustCamera(newStep); // Watch for changes in configStep and adjust the camera
+    },
   },
   methods: {
     initScene() {
       const container = document.getElementById("scene-container");
 
       // Renderer
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      container.appendChild(renderer.domElement);
+      this.renderer = new THREE.WebGLRenderer({ antialias: true });
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(this.renderer.domElement);
 
       // Scene
-      const scene = new THREE.Scene();
+      this.scene = new THREE.Scene();
 
       // Camera
-      const camera = new THREE.PerspectiveCamera(
-        50, // FOV for standard perspective
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      camera.position.set(10, 0, 4.2); // Default camera position
-      scene.add(camera);
+      this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      this.camera.position.set(10, 0, 4.2); // Default camera position
+      this.camera.zoom = 1;
+      this.camera.updateProjectionMatrix();
+      this.scene.add(this.camera);
 
       // Orbit Controls
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+      this.controls.enableDamping = true;
 
       // Lighting
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
+      this.scene.add(ambientLight);
 
       const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
       directionalLight.position.set(5, 10, 7.5);
-      scene.add(directionalLight);
+      this.scene.add(directionalLight);
 
       // Environment Map
       const rgbeLoader = new RGBELoader();
       rgbeLoader.load("/textures/environment.hdr", (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
-        scene.background = texture;
-        scene.environment = texture;
+        this.scene.background = texture;
+        this.scene.environment = texture;
       });
 
       // Shoe Model
-      let shoe = null;
       const loader = new GLTFLoader();
       loader.load("/models/Shoe.glb", (gltf) => {
-        shoe = gltf.scene;
-
-        // Set shoe size to 16
-        shoe.scale.set(16, 16, 16); // Updated scale
+        const shoe = gltf.scene;
+        shoe.scale.set(16, 16, 16); // Default shoe size
         shoe.position.set(0, 0.5, 0);
-        scene.add(shoe);
+        this.scene.add(shoe);
 
-        // Make the shoe available globally for the configurator
+        // Make the shoe available globally for configurator
         window.sneaker = shoe;
-
-        // GUI Setup
-        this.setupGUI(camera, shoe);
       });
 
       // Animation Loop
       const animate = () => {
         requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
       };
       animate();
 
       // Resize Handler
       window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
       });
     },
-    setupGUI(camera, shoe) {
-      const gui = new GUI();
-
-      // Style GUI for higher z-index
-      gui.domElement.style.position = "absolute";
-      gui.domElement.style.top = "10px";
-      gui.domElement.style.right = "10px";
-      gui.domElement.style.zIndex = "10000"; // Set higher z-index
-
-      // Append GUI to DOM explicitly
-      document.body.appendChild(gui.domElement);
-
-      // Camera Position Controls
-      const cameraFolder = gui.addFolder("Camera Position");
-      cameraFolder.add(camera.position, "x", -20, 20, 0.1).name("Camera X");
-      cameraFolder.add(camera.position, "y", -20, 20, 0.1).name("Camera Y");
-      cameraFolder.add(camera.position, "z", -20, 20, 0.1).name("Camera Z");
-      cameraFolder.add(camera, "fov", 20, 100, 1).name("Zoom (FOV)").onChange(() => {
-        camera.updateProjectionMatrix();
-      });
-      cameraFolder.open();
-
-      // Shoe Position Controls
-      const shoeFolder = gui.addFolder("Shoe Position");
-      if (shoe) {
-        shoeFolder.add(shoe.position, "x", -10, 10, 0.1).name("Shoe X");
-        shoeFolder.add(shoe.position, "y", -10, 10, 0.1).name("Shoe Y");
-        shoeFolder.add(shoe.position, "z", -10, 10, 0.1).name("Shoe Z");
-        shoeFolder.open();
-
-        // Shoe Scale Controls (for size adjustments)
-        shoeFolder.add(shoe.scale, "x", 1, 20, 0.1).name("Scale X");
-        shoeFolder.add(shoe.scale, "y", 1, 20, 0.1).name("Scale Y");
-        shoeFolder.add(shoe.scale, "z", 1, 20, 0.1).name("Scale Z");
+    adjustCamera(step) {
+      // Adjust camera based on step
+      if (step === 1) {
+        this.camera.position.set(10, 10, 10);
+        this.camera.zoom = 20;
+      } else if (step === 2) {
+        this.camera.position.set(10, 0, 4.2);
+        this.camera.zoom = 1;
+      } else if (step === 3) {
+        this.camera.position.set(8, 13.7, 0.5);
+        this.camera.zoom = 23;
       }
+      this.camera.updateProjectionMatrix();
     },
   },
 };
@@ -135,6 +109,6 @@ export default {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1; /* Behind other components */
+  z-index: 1;
 }
 </style>
