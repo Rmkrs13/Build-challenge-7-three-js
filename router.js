@@ -6,31 +6,31 @@ import DashboardView from "/views/DashboardView.vue";
 const routes = [
   {
     path: "/",
-    component: HomeView, // Default route for all users
+    component: HomeView,
   },
   {
     path: "/login",
-    component: LoginView, // Login route
+    component: LoginView,
   },
   {
     path: "/dashboard",
-    component: DashboardView, // Dashboard route
-    beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("token"); // Check for authentication token
-      if (!token) {
-        next("/login"); // Redirect to login if no token is present
-      } else {
-        next(); // Allow access to dashboard
-      }
-    },
-  },
-  {
-    path: "/:pathMatch(.*)*", // Catch-all route for unknown paths
-    redirect: "/",
+    component: DashboardView,
+    meta: { requiresAuth: true },
   },
 ];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+// Route Guard to check for authentication
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !localStorage.getItem("token")) {
+    next("/login");
+  } else {
+    next();
+  }
+});
+
+export default router;
