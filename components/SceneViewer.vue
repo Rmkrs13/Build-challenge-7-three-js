@@ -27,12 +27,12 @@ export default {
 
       // Camera
       const camera = new THREE.PerspectiveCamera(
-        50, // Standard FOV for a realistic perspective
+        50, // FOV for standard perspective
         window.innerWidth / window.innerHeight,
         0.1,
         1000
       );
-      camera.position.set(0, 0, 6); // Adjusted position to accommodate larger shoe
+      camera.position.set(10, 0, 4.2); // Default camera position
       scene.add(camera);
 
       // Orbit Controls
@@ -61,9 +61,9 @@ export default {
       loader.load("/models/Shoe.glb", (gltf) => {
         shoe = gltf.scene;
 
-        // Set a much larger shoe size
-        shoe.scale.set(20, 20, 20); // Extremely large size to fill the screen
-        shoe.position.set(0, -1, 0); // Adjust position to center the shoe better
+        // Set shoe size to 16
+        shoe.scale.set(16, 16, 16); // Updated scale
+        shoe.position.set(0, 0.5, 0);
         scene.add(shoe);
 
         // Make the shoe available globally for the configurator
@@ -119,9 +119,9 @@ export default {
         shoeFolder.open();
 
         // Shoe Scale Controls (for size adjustments)
-        shoeFolder.add(shoe.scale, "x", 1, 50, 1).name("Scale X");
-        shoeFolder.add(shoe.scale, "y", 1, 50, 1).name("Scale Y");
-        shoeFolder.add(shoe.scale, "z", 1, 50, 1).name("Scale Z");
+        shoeFolder.add(shoe.scale, "x", 1, 20, 0.1).name("Scale X");
+        shoeFolder.add(shoe.scale, "y", 1, 20, 0.1).name("Scale Y");
+        shoeFolder.add(shoe.scale, "z", 1, 20, 0.1).name("Scale Z");
       }
     },
   },
