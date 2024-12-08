@@ -36,6 +36,7 @@ header {
   color: white;
   padding: 10px 20px;
   text-align: center;
+  background-color: #69ff47;
 }
 
 header h1 {
@@ -62,5 +63,6 @@ footer {
 
 footer p {
   margin: 0;
+  background-color: #69ff47
 }
 </style>
