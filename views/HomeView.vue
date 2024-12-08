@@ -3,7 +3,7 @@
     <Header />
     <img src="/logo.png" alt="Swear Logo" class="logo" />
     <div class="customizer-section">
-      <Customizer :onStepChange="updateStep" @submitOrder="openOrderModal" />
+      <Customizer @submitOrder="openOrderModal" :onStepChange="updateStep" />
     </div>
     <Footer />
     <SceneViewer :configStep="currentStep" />
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       currentStep: 0, // Track the current customization step
-      showOrderModal: false, // Control the visibility of the OrderForm modal
+      showOrderModal: false,
       orderData: {
         customer: {
           name: "",
@@ -55,8 +55,8 @@ export default {
       this.currentStep = step; // Update the step when it changes in the Customizer
     },
     openOrderModal(orderDetails) {
+      this.orderData.shoeConfig = orderDetails.shoeConfig;
       this.showOrderModal = true;
-      this.orderData.shoeConfig = orderDetails.shoeConfig; // Pass the shoe configuration details to the modal
     },
     closeOrderModal() {
       this.showOrderModal = false;

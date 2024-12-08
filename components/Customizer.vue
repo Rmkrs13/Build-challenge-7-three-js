@@ -41,7 +41,7 @@
 
 <script>
 export default {
-  props: ["onStepChange", "onSubmitOrder"], // Props for step updates and order handling
+  props: ["onStepChange"], // Pass function to adjust the camera
   data() {
     return {
       step: 0,
@@ -76,7 +76,7 @@ export default {
         this.step++;
         this.onStepChange(this.step); // Notify SceneViewer of step change
       } else {
-        this.orderShoe();
+        this.emitOrder(); // Emit an event to open the order modal
       }
     },
     previousStep() {
@@ -85,16 +85,17 @@ export default {
         this.onStepChange(this.step); // Notify SceneViewer of step change
       }
     },
-    orderShoe() {
-      const shoeConfig = {
-        size: 42, // Example size, replace with actual input if necessary
-        colors: {
-          laces: this.selectedColor || "Red",
-          sole: "White", // Example default color
-          inside: "Blue", // Example default color
+    emitOrder() {
+      this.$emit("submitOrder", {
+        shoeConfig: {
+          size: 42, // Update as necessary
+          colors: {
+            laces: this.selectedColor, // Update logic as needed
+            sole: "White", // Update logic as needed
+            inside: "Blue", // Update logic as needed
+          },
         },
-      };
-      this.onSubmitOrder(shoeConfig); // Emit order details to the parent
+      });
     },
     applyColor(color) {
       this.selectedColor = color;
