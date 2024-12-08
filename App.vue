@@ -7,7 +7,7 @@
       <Customizer />
     </main>
     <footer>
-      <p>Challenge 6 - Three.js | Lars Raeymaekers</p>
+      <p>&copy; 2024 by SWEAR London | Web by Lars Raeymaekers</p>
     </footer>
   </div>
 </template>
