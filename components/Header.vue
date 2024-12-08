@@ -9,9 +9,13 @@
 
 <style scoped>
 .header {
+  position: fixed;
+  top: 0;
+  width: 100%;
   background-color: #69ff47;
   text-align: center;
   padding: 10px 0;
+  z-index: 10;
 }
 h1 {
   margin: 0;

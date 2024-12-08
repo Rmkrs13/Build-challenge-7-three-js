@@ -17,11 +17,11 @@ export default {
       const container = document.getElementById("scene-container");
 
       const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(container.offsetWidth, container.offsetHeight);
-      container.appendChild(renderer.domElement);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       camera.position.set(0, 1, 2);
 
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -57,8 +57,11 @@ export default {
 
 <style scoped>
 #scene-container {
-  width: 100%;
-  height: calc(100vh - 80px); /* Adjust height for header and footer */
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* Behind other components */
 }
 </style>

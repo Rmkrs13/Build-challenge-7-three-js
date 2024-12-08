@@ -2,11 +2,11 @@
   <div class="home">
     <Header />
     <img src="/logo.png" alt="Swear Logo" class="logo" />
-    <SceneViewer />
     <div class="customizer-section">
       <Customizer />
     </div>
     <Footer />
+    <SceneViewer />
   </div>
 </template>
 
@@ -25,22 +25,32 @@ export default {
 .home {
   position: relative;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
 }
 
 .logo {
-  position: relative;
-  margin: 10px auto;
-  display: block;
-  width: 120px; /* Increased size */
+  position: fixed;
+  top: 50px; /* Below the header */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  z-index: 10;
 }
+
 .customizer-section {
-  position: absolute;
-  bottom: 20px;
+  position: fixed;
+  bottom: 100px; /* Above the footer */
   width: 100%;
   display: flex;
   justify-content: center;
-  z-index: 5;
+  z-index: 10;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
 }
 </style>

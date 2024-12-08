@@ -9,13 +9,10 @@
   background-color: #69ff47;
   text-align: center;
   padding: 10px 0;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   z-index: 10;
 }
 p {
   margin: 0;
-  font-size: 12px; /* Adjusted text size */
+  font-size: 12px;
 }
 </style>
