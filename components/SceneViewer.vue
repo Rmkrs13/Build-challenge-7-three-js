@@ -15,7 +15,7 @@ export default {
   },
   watch: {
     configStep(newStep) {
-      this.adjustCamera(newStep); // Watch for changes in configStep and adjust the camera
+      this.adjustCamera(newStep); // Adjust the camera when the step changes
     },
   },
   methods: {
@@ -23,9 +23,9 @@ export default {
       const container = document.getElementById("scene-container");
 
       // Renderer
-      this.renderer = new THREE.WebGLRenderer({ antialias: true });
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
-      container.appendChild(this.renderer.domElement);
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
 
       // Scene
       this.scene = new THREE.Scene();
@@ -33,12 +33,10 @@ export default {
       // Camera
       this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
       this.camera.position.set(10, 0, 4.2); // Default camera position
-      this.camera.zoom = 1;
-      this.camera.updateProjectionMatrix();
       this.scene.add(this.camera);
 
       // Orbit Controls
-      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+      this.controls = new OrbitControls(this.camera, renderer.domElement);
       this.controls.enableDamping = true;
 
       // Lighting
@@ -65,7 +63,7 @@ export default {
         shoe.position.set(0, 0.5, 0);
         this.scene.add(shoe);
 
-        // Make the shoe available globally for configurator
+        // Make the shoe available globally for customization
         window.sneaker = shoe;
       });
 
@@ -73,7 +71,7 @@ export default {
       const animate = () => {
         requestAnimationFrame(animate);
         this.controls.update();
-        this.renderer.render(this.scene, this.camera);
+        renderer.render(this.scene, this.camera);
       };
       animate();
 
@@ -81,20 +79,19 @@ export default {
       window.addEventListener("resize", () => {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight);
       });
     },
     adjustCamera(step) {
-      // Adjust camera based on step
       if (step === 1) {
         this.camera.position.set(10, 10, 10);
-        this.camera.zoom = 20;
+        this.camera.fov = 45; // Less zoomed-in for step 1
       } else if (step === 2) {
         this.camera.position.set(10, 0, 4.2);
-        this.camera.zoom = 1;
+        this.camera.fov = 50; // Default position and zoom
       } else if (step === 3) {
         this.camera.position.set(8, 13.7, 0.5);
-        this.camera.zoom = 23;
+        this.camera.fov = 40; // Less zoomed-in for step 3
       }
       this.camera.updateProjectionMatrix();
     },
