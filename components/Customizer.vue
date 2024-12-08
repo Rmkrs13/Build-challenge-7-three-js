@@ -11,7 +11,7 @@
         <input id="sole-color" type="color" v-model="soleColor" @input="updateSoleColor" />
       </div>
       <div class="control">
-        <label for="shoe-body-color">Body Color:</label>
+        <label for="shoe-body-color">Inside Color:</label> <!-- Updated label -->
         <input id="shoe-body-color" type="color" v-model="shoeBodyColor" @input="updateBodyColor" />
       </div>
     </div>
@@ -49,7 +49,8 @@ export default {
     updateBodyColor() {
       if (window.sneaker) {
         window.sneaker.traverse((child) => {
-          if (child.isMesh && child.name.toLowerCase().includes("body")) {
+          // Target "inside" parts of the model
+          if (child.isMesh && child.name.toLowerCase().includes("inside")) {
             child.material.color.set(this.shoeBodyColor);
           }
         });
