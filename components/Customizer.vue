@@ -29,25 +29,31 @@ export default {
   },
   methods: {
     updateLacesColor() {
-      window.sneaker?.traverse((child) => {
-        if (child.isMesh && child.name.toLowerCase().includes("laces")) {
-          child.material.color.set(this.lacesColor);
-        }
-      });
+      if (window.sneaker) {
+        window.sneaker.traverse((child) => {
+          if (child.isMesh && child.name.toLowerCase().includes("laces")) {
+            child.material.color.set(this.lacesColor);
+          }
+        });
+      }
     },
     updateSoleColor() {
-      window.sneaker?.traverse((child) => {
-        if (child.isMesh && child.name.toLowerCase().includes("sole")) {
-          child.material.color.set(this.soleColor);
-        }
-      });
+      if (window.sneaker) {
+        window.sneaker.traverse((child) => {
+          if (child.isMesh && child.name.toLowerCase().includes("sole")) {
+            child.material.color.set(this.soleColor);
+          }
+        });
+      }
     },
     updateBodyColor() {
-      window.sneaker?.traverse((child) => {
-        if (child.isMesh && child.name.toLowerCase().includes("body")) {
-          child.material.color.set(this.shoeBodyColor);
-        }
-      });
+      if (window.sneaker) {
+        window.sneaker.traverse((child) => {
+          if (child.isMesh && child.name.toLowerCase().includes("body")) {
+            child.material.color.set(this.shoeBodyColor);
+          }
+        });
+      }
     },
   },
 };

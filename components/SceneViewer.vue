@@ -14,18 +14,22 @@ export default {
   },
   methods: {
     initScene() {
-      // Get the container element
       const container = document.getElementById("scene-container");
 
-      // Set up renderer
+      // Renderer setup
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(container.offsetWidth, container.offsetHeight);
       renderer.setPixelRatio(window.devicePixelRatio);
       container.appendChild(renderer.domElement);
 
-      // Create scene and camera
+      // Scene and camera
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        container.offsetWidth / container.offsetHeight,
+        0.1,
+        1000
+      );
       camera.position.set(0, 1, 2);
 
       // Orbit controls
@@ -33,18 +37,12 @@ export default {
       controls.enableDamping = true;
 
       // Lighting
-      const light = new THREE.DirectionalLight(0xffffff, 1);
-      light.position.set(5, 5, 5);
-      scene.add(light);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(ambientLight);
 
-      // Load the GLTF model
-      const loader = new GLTFLoader();
-      loader.load("/models/Shoe.glb", (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(3, 3, 3);
-        model.position.set(0, 0, 0);
-        scene.add(model);
-      });
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(5, 10, 5);
+      scene.add(directionalLight);
 
       // Load HDR environment texture
       const rgbeLoader = new RGBELoader();
@@ -54,7 +52,26 @@ export default {
         scene.environment = texture;
       });
 
-      // Handle resizing
+      // Load the GLTF model
+      const loader = new GLTFLoader();
+      loader.load("/models/Shoe.glb", (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(3, 3, 3);
+        model.position.set(0, 0, 0);
+        scene.add(model);
+
+        // Make the model accessible globally for customizer
+        window.sneaker = model;
+
+        // Debug: log child mesh names
+        model.traverse((child) => {
+          if (child.isMesh) {
+            console.log("Mesh name:", child.name);
+          }
+        });
+      });
+
+      // Handle window resize
       window.addEventListener("resize", () => {
         camera.aspect = container.offsetWidth / container.offsetHeight;
         camera.updateProjectionMatrix();
