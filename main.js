@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import router from './router';
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -67,14 +68,14 @@ loader.load('/models/Shoe.glb', (gltf) => {
 
   sneaker.traverse((child) => {
     if (child.isMesh) {
-      console.log("Mesh name:", child.name); // Debug mesh names
-      child.castShadow = true; // Cast shadows
-      child.receiveShadow = true; // Receive shadows
+      console.log('Mesh name:', child.name);
+      child.castShadow = true;
+      child.receiveShadow = true;
     }
   });
 
   scene.add(sneaker);
-  window.sneaker = sneaker; // Make sneaker globally accessible
+  window.sneaker = sneaker;
 });
 
 // GUI Controls
@@ -116,4 +117,4 @@ window.addEventListener('resize', () => {
 });
 
 // Start Vue App
-createApp(App).mount('#app');
+createApp(App).use(router).mount('#app');

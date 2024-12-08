@@ -4,7 +4,7 @@
       <h1>Sneaker Configurator</h1>
     </header>
     <main>
-      <Customizer />
+      <router-view />
     </main>
     <footer>
       <p>Challenge 6 - Three.js | Lars Raeymaekers</p>
@@ -13,13 +13,8 @@
 </template>
 
 <script>
-import Customizer from './components/Customizer.vue';
-
 export default {
   name: 'App',
-  components: {
-    Customizer,
-  },
 };
 </script>
 
