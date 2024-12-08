@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "/views/HomeView.vue";
 import LoginView from "/views/LoginView.vue";
 import DashboardView from "/views/DashboardView.vue";
+import OrdersView from "/views/OrdersView.vue";
+import OrderDetailView from "/views/OrderDetailView.vue";
 
 const routes = [
   {
@@ -15,6 +17,16 @@ const routes = [
   {
     path: "/dashboard",
     component: DashboardView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/orders",
+    component: OrdersView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/orders/:id",
+    component: OrderDetailView,
     meta: { requiresAuth: true },
   },
 ];
