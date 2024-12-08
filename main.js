@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
+<<<<<<< HEAD
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -117,4 +118,6 @@ window.addEventListener('resize', () => {
 });
 
 // Start Vue App
+=======
+>>>>>>> parent of 44619cd (Cleaning out file sytem)
 createApp(App).use(router).mount('#app');
