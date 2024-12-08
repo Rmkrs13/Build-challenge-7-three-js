@@ -41,7 +41,7 @@
 
 <script>
 export default {
-  props: ["onStepChange"], // Pass function to adjust the camera
+  props: ["onStepChange", "onSubmitOrder"], // Props for step updates and order handling
   data() {
     return {
       step: 0,
@@ -86,7 +86,15 @@ export default {
       }
     },
     orderShoe() {
-      alert("Order placed successfully!");
+      const shoeConfig = {
+        size: 42, // Example size, replace with actual input if necessary
+        colors: {
+          laces: this.selectedColor || "Red",
+          sole: "White", // Example default color
+          inside: "Blue", // Example default color
+        },
+      };
+      this.onSubmitOrder(shoeConfig); // Emit order details to the parent
     },
     applyColor(color) {
       this.selectedColor = color;

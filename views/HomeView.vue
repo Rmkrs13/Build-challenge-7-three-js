@@ -3,10 +3,16 @@
     <Header />
     <img src="/logo.png" alt="Swear Logo" class="logo" />
     <div class="customizer-section">
-      <Customizer :onStepChange="updateStep" />
+      <Customizer :onStepChange="updateStep" @submitOrder="openOrderModal" />
     </div>
     <Footer />
     <SceneViewer :configStep="currentStep" />
+    <OrderForm
+      v-if="showOrderModal"
+      :orderData="orderData"
+      @close="closeOrderModal"
+      @orderPlaced="handleOrderPlaced"
+    />
   </div>
 </template>
 
@@ -15,17 +21,49 @@ import Header from "../components/Header.vue";
 import Footer from "../components/Footer.vue";
 import SceneViewer from "../components/SceneViewer.vue";
 import Customizer from "../components/Customizer.vue";
+import OrderForm from "../components/OrderForm.vue";
 
 export default {
-  components: { Header, Footer, SceneViewer, Customizer },
+  components: { Header, Footer, SceneViewer, Customizer, OrderForm },
   data() {
     return {
       currentStep: 0, // Track the current customization step
+      showOrderModal: false, // Control the visibility of the OrderForm modal
+      orderData: {
+        customer: {
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          city: "",
+          zip: "",
+          country: "",
+        },
+        shoeConfig: {
+          size: 42,
+          colors: {
+            laces: "Red",
+            sole: "White",
+            inside: "Blue",
+          },
+        },
+      },
     };
   },
   methods: {
     updateStep(step) {
       this.currentStep = step; // Update the step when it changes in the Customizer
+    },
+    openOrderModal(orderDetails) {
+      this.showOrderModal = true;
+      this.orderData.shoeConfig = orderDetails.shoeConfig; // Pass the shoe configuration details to the modal
+    },
+    closeOrderModal() {
+      this.showOrderModal = false;
+    },
+    handleOrderPlaced() {
+      this.showOrderModal = false;
+      alert("Order placed successfully!");
     },
   },
 };
@@ -61,6 +99,10 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+  text-align: center;
+  background-color: #f8f8f8;
+  padding: 10px 0;
+  font-size: 12px;
   z-index: 10;
 }
 </style>
