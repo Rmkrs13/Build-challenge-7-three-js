@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+import { GUI } from "dat.gui";
 
 export default {
   mounted() {
@@ -16,50 +17,37 @@ export default {
     initScene() {
       const container = document.getElementById("scene-container");
 
-      // Renderer setup
+      // Renderer
       const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(container.offsetWidth, container.offsetHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.shadowMap.enabled = true; // Enable shadows
+      renderer.setSize(window.innerWidth, window.innerHeight);
       container.appendChild(renderer.domElement);
 
-      // Scene and camera
+      // Scene
       const scene = new THREE.Scene();
+
+      // Camera
       const camera = new THREE.PerspectiveCamera(
-        75,
-        container.offsetWidth / container.offsetHeight,
+        50, // Standard FOV for a realistic perspective
+        window.innerWidth / window.innerHeight,
         0.1,
         1000
       );
-      camera.position.set(0, 1, 3);
+      camera.position.set(0, 0, 6); // Adjusted position to accommodate larger shoe
+      scene.add(camera);
 
-      // Orbit controls
+      // Orbit Controls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
 
       // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.2); // Reduce intensity for more shadows
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-      directionalLight.position.set(2, 5, 3);
-      directionalLight.castShadow = true; // Enable shadow casting
-      directionalLight.shadow.mapSize.width = 2048; // Higher resolution for sharper shadows
-      directionalLight.shadow.mapSize.height = 2048;
-      directionalLight.shadow.camera.near = 0.5;
-      directionalLight.shadow.camera.far = 50;
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(5, 10, 7.5);
       scene.add(directionalLight);
 
-      // Add a ground plane to catch shadows
-      const groundGeometry = new THREE.PlaneGeometry(10, 10);
-      const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
-      const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-      ground.rotation.x = -Math.PI / 2;
-      ground.position.y = -0.5;
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      // Load HDR environment texture
+      // Environment Map
       const rgbeLoader = new RGBELoader();
       rgbeLoader.load("/textures/environment.hdr", (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -67,38 +55,74 @@ export default {
         scene.environment = texture;
       });
 
-      // Load the GLTF model
+      // Shoe Model
+      let shoe = null;
       const loader = new GLTFLoader();
       loader.load("/models/Shoe.glb", (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(3, 3, 3);
-        model.position.set(0, 0, 0);
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true; // Enable shadow casting for model
-            child.receiveShadow = true; // Allow model to receive shadows
-          }
-        });
-        scene.add(model);
+        shoe = gltf.scene;
 
-        // Make the model accessible globally for customizer
-        window.sneaker = model;
+        // Set a much larger shoe size
+        shoe.scale.set(20, 20, 20); // Extremely large size to fill the screen
+        shoe.position.set(0, -1, 0); // Adjust position to center the shoe better
+        scene.add(shoe);
+
+        // Make the shoe available globally for the configurator
+        window.sneaker = shoe;
+
+        // GUI Setup
+        this.setupGUI(camera, shoe);
       });
 
-      // Handle window resize
-      window.addEventListener("resize", () => {
-        camera.aspect = container.offsetWidth / container.offsetHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.offsetWidth, container.offsetHeight);
-      });
-
-      // Animation loop
+      // Animation Loop
       const animate = () => {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
       };
       animate();
+
+      // Resize Handler
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    },
+    setupGUI(camera, shoe) {
+      const gui = new GUI();
+
+      // Style GUI for higher z-index
+      gui.domElement.style.position = "absolute";
+      gui.domElement.style.top = "10px";
+      gui.domElement.style.right = "10px";
+      gui.domElement.style.zIndex = "10000"; // Set higher z-index
+
+      // Append GUI to DOM explicitly
+      document.body.appendChild(gui.domElement);
+
+      // Camera Position Controls
+      const cameraFolder = gui.addFolder("Camera Position");
+      cameraFolder.add(camera.position, "x", -20, 20, 0.1).name("Camera X");
+      cameraFolder.add(camera.position, "y", -20, 20, 0.1).name("Camera Y");
+      cameraFolder.add(camera.position, "z", -20, 20, 0.1).name("Camera Z");
+      cameraFolder.add(camera, "fov", 20, 100, 1).name("Zoom (FOV)").onChange(() => {
+        camera.updateProjectionMatrix();
+      });
+      cameraFolder.open();
+
+      // Shoe Position Controls
+      const shoeFolder = gui.addFolder("Shoe Position");
+      if (shoe) {
+        shoeFolder.add(shoe.position, "x", -10, 10, 0.1).name("Shoe X");
+        shoeFolder.add(shoe.position, "y", -10, 10, 0.1).name("Shoe Y");
+        shoeFolder.add(shoe.position, "z", -10, 10, 0.1).name("Shoe Z");
+        shoeFolder.open();
+
+        // Shoe Scale Controls (for size adjustments)
+        shoeFolder.add(shoe.scale, "x", 1, 50, 1).name("Scale X");
+        shoeFolder.add(shoe.scale, "y", 1, 50, 1).name("Scale Y");
+        shoeFolder.add(shoe.scale, "z", 1, 50, 1).name("Scale Z");
+      }
     },
   },
 };
@@ -112,6 +136,5 @@ export default {
   width: 100vw;
   height: 100vh;
   z-index: 1; /* Behind other components */
-  overflow: hidden;
 }
 </style>
