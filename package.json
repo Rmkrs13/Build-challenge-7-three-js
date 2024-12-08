@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@chakra-ui/vue": "^0.10.2-next.0",
+    "@chakra-ui/vue-next": "^1.0.0-alpha.16",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@vitejs/plugin-vue": "^5.2.0",
