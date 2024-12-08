@@ -1,11 +1,10 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Configurator from "../views/Configurator.vue";
-import Login from "../views/Login.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import Login from '../views/Login.vue';
+import Configurator from '../views/Configurator.vue';
 
 const routes = [
-  { path: "/", component: Configurator },
-  { path: "/login", component: Login },
-  // Add more routes as needed
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/configurator', name: 'Configurator', component: Configurator },
 ];
 
 const router = createRouter({
