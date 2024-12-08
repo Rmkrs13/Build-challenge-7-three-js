@@ -56,17 +56,17 @@ export default {
 <style scoped>
 #customizer {
   background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  margin: 20px;
+  width: 90%;
+  max-width: 400px;
   text-align: center;
 }
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 .control label {
   font-weight: bold;
