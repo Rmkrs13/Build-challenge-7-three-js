@@ -31,10 +31,10 @@ export default {
 
 .logo {
   position: fixed;
-  top: 50px; /* Below the header */
+  top: 80px; /* Below the header */
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
+  width: 180px; /* Increased size for better visibility */
   z-index: 10;
 }
 
