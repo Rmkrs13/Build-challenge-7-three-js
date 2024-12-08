@@ -6,6 +6,7 @@
       <button @click="logout" class="logout-button">Logout</button>
     </header>
     <section class="dashboard-content">
+      <!-- Orders Section -->
       <div class="orders-section">
         <h2>Orders ({{ orders.length }})</h2>
         <table class="orders-table">
@@ -29,6 +30,31 @@
         </table>
         <p v-if="orders.length === 0" class="empty-state">No orders available.</p>
       </div>
+
+      <!-- Password Change Section -->
+      <div class="password-section">
+        <h2>Change Password</h2>
+        <form @submit.prevent="changePassword" class="password-form">
+          <input
+            type="password"
+            v-model="oldPassword"
+            placeholder="Old Password"
+            required
+            autocomplete="current-password"
+          />
+          <input
+            type="password"
+            v-model="newPassword"
+            placeholder="New Password"
+            required
+            autocomplete="new-password"
+          />
+          <button type="submit" class="action-button">Change Password</button>
+        </form>
+        <p v-if="passwordMessage" :class="{ error: passwordError, success: !passwordError }">
+          {{ passwordMessage }}
+        </p>
+      </div>
     </section>
   </div>
 </template>
@@ -41,6 +67,10 @@ export default {
   data() {
     return {
       orders: [],
+      oldPassword: "",
+      newPassword: "",
+      passwordMessage: "",
+      passwordError: false,
       socket: null,
     };
   },
@@ -48,20 +78,32 @@ export default {
     const token = localStorage.getItem("token");
 
     try {
+      // Fetch initial orders
       const response = await axios.get("https://api.sneaker-configurator.larslars.be/api/v1/orders", {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.orders = response.data.data;
 
-      // WebSocket connection
-      this.socket = io("https://api.sneaker-configurator.larslars.be", { auth: { token } });
-      this.socket.on("new_order", (order) => this.orders.push(order));
+      // Set up WebSocket connection
+      this.socket = io("https://api.sneaker-configurator.larslars.be", {
+        auth: { token },
+        transports: ["websocket"], // Ensure proper WebSocket transport
+      });
+
+      // Listen for new orders
+      this.socket.on("new_order", (order) => {
+        this.orders.push(order);
+      });
+
+      // Listen for updated orders
       this.socket.on("order_updated", (updatedOrder) => {
         const index = this.orders.findIndex((o) => o._id === updatedOrder._id);
-        if (index !== -1) this.orders[index] = updatedOrder;
+        if (index !== -1) {
+          this.$set(this.orders, index, updatedOrder);
+        }
       });
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.error("Error fetching orders or setting up WebSocket:", error);
     }
   },
   beforeUnmount() {
@@ -80,6 +122,26 @@ export default {
         this.orders = this.orders.filter((order) => order._id !== orderId);
       } catch (error) {
         console.error("Failed to delete order:", error);
+      }
+    },
+    async changePassword() {
+      const token = localStorage.getItem("token");
+      try {
+        await axios.post(
+          "https://api.sneaker-configurator.larslars.be/api/v1/auth/change-password",
+          { oldPassword: this.oldPassword, newPassword: this.newPassword },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        this.passwordMessage = "Password changed successfully.";
+        this.passwordError = false;
+        this.oldPassword = "";
+        this.newPassword = "";
+      } catch (error) {
+        this.passwordMessage =
+          error.response?.data?.message === "Old password is incorrect"
+            ? "Old password is incorrect."
+            : "Failed to change password. Please try again.";
+        this.passwordError = true;
       }
     },
     logout() {
@@ -159,18 +221,23 @@ export default {
   border-radius: 4px;
 }
 
-.action-button:hover {
-  background-color: #388e3c;
-}
-
-.delete-button:hover {
-  background-color: #d32f2f;
-}
-
 .message {
   margin-top: 10px;
   font-size: 14px;
-  color: #333;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
 .empty-state {

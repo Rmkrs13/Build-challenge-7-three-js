@@ -26,6 +26,7 @@
         <button @click="deleteOrder" class="delete-button">Delete Order</button>
         <p v-if="message" class="message">{{ message }}</p>
       </div>
+      <button @click="goBack" class="back-button">Back to Dashboard</button>
     </div>
   </template>
   
@@ -41,8 +42,8 @@
       };
     },
     async created() {
-      const token = localStorage.getItem("token");
       try {
+        const token = localStorage.getItem("token");
         const response = await axios.get(`https://api.sneaker-configurator.larslars.be/api/v1/orders/${this.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -53,8 +54,8 @@
     },
     methods: {
       async updateOrder() {
-        const token = localStorage.getItem("token");
         try {
+          const token = localStorage.getItem("token");
           await axios.put(
             `https://api.sneaker-configurator.larslars.be/api/v1/orders/${this.id}`,
             { status: this.order.status },
@@ -66,8 +67,8 @@
         }
       },
       async deleteOrder() {
-        const token = localStorage.getItem("token");
         try {
+          const token = localStorage.getItem("token");
           await axios.delete(`https://api.sneaker-configurator.larslars.be/api/v1/orders/${this.id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -77,10 +78,13 @@
           this.message = "Failed to delete order.";
         }
       },
+      goBack() {
+        this.$router.push("/dashboard");
+      },
     },
   };
   </script>
-
+  
   <style scoped>
   .order-view {
     font-family: Arial, sans-serif;
@@ -109,7 +113,8 @@
   }
   
   .action-button,
-  .delete-button {
+  .delete-button,
+  .back-button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -127,6 +132,11 @@
     color: white;
   }
   
+  .back-button {
+    background-color: #2196f3;
+    color: white;
+  }
+  
   .message {
     margin-top: 10px;
     font-size: 14px;
@@ -139,5 +149,9 @@
   
   .delete-button:hover {
     background-color: #d32f2f;
+  }
+  
+  .back-button:hover {
+    background-color: #1976d2;
   }
   </style>
